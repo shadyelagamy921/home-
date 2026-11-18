@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اطلب طعامك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef3f1;
+    --ink: #1b2b27;
+    --green: #14524a;
+    --green-deep: #0e3b35;
+    --pomegranate: #b3262d;
+    --surface: #ffffff;
+    --line: #d5e0dc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14201d; --ink: #e8f0ed; --surface: #1c2c28; --line: #2c403b; }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Tajawal", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+  }
+  header {
+    width: 100%;
+    max-width: 760px;
+    padding: 22px 20px 14px;
+    border-bottom: 3px solid var(--pomegranate);
+  }
+  header h1 { margin: 0; font-size: 30px; font-weight: 800; letter-spacing: 0; color: var(--green); }
+  @media (prefers-color-scheme: dark) { header h1 { color: #7fd0c3; } }
+  header p { margin: 4px 0 0; font-size: 15px; opacity: .8; }
+
+  #chat {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    min-height: 0;
+    background: var(--surface);
+    border-inline: 1px solid var(--line);
+    display: flex;
+  }
+  #chat > div { flex: 1; min-width: 0; }
+
+  .notice {
+    margin: 40px 24px;
+    padding: 16px 18px;
+    border: 1px solid var(--pomegranate);
+    border-radius: 10px;
+    line-height: 1.8;
+  }
+  .notice code { direction: ltr; unicode-bidi: embed; font-size: 13px; }
+
+  /* n8n chat theme */
+  #chat {
+    --chat--color-primary: #14524a;
+    --chat--color-primary-shade-50: #0f423b;
+    --chat--color-primary-shade-100: #0b332e;
+    --chat--color-secondary: #b3262d;
+    --chat--color-secondary-shade-50: #911e24;
+    --chat--font-family: "Tajawal", system-ui, sans-serif;
+    --chat--message--font-size: 16px;
+    --chat--message--bot--background: #eaf1ee;
+    --chat--message--bot--color: #1b2b27;
+    --chat--message--user--background: #14524a;
+    --chat--message--user--color: #ffffff;
+    --chat--border-radius: 10px;
+    --chat--spacing: 1rem;
+    --chat--heading--font-size: 1.4em;
+  }
+  @media (prefers-color-scheme: dark) {
+    #chat {
+      --chat--message--bot--background: #2a3d38;
+      --chat--message--bot--color: #e8f0ed;
+      --chat--body--background: #1c2c28;
+      --chat--footer--background: #1c2c28;
+      --chat--color-light: #1c2c28;
+      --chat--color-dark: #e8f0ed;
+    }
+  }
+  #chat .chat-message { text-align: start; }
+</style>
+</head>
+<body>
+<header>
+  <h1>اطلب طعامك</h1>
+  <p>اختر من القائمة وأكّد طلبك في دقيقة.</p>
+</header>
+
+<div id="chat"></div>
+
+<script type="module">
+  import { createChat } from "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js";
+
+  // Edit this one value: the address of your n8n server (no trailing slash).
+  const N8N_BASE_URL = "https://YOUR-N8N-DOMAIN";
+  // Taken from your workflow's Chat Trigger node.
+  const WEBHOOK_ID = "2002e6ad-31e6-4298-ab2a-b9206193a211";
+
+  const target = document.getElementById("chat");
+
+  if (N8N_BASE_URL.includes("YOUR-N8N-DOMAIN")) {
+    target.innerHTML =
+      '<div class="notice">لم يتم ضبط عنوان n8n بعد. افتح الملف وغيّر قيمة ' +
+      '<code>N8N_BASE_URL</code> إلى عنوان سيرفر n8n الخاص بك.</div>';
+  } else {
+    createChat({
+      webhookUrl: `${N8N_BASE_URL}/webhook/${WEBHOOK_ID}/chat`,
+      target: "#chat",
+      mode: "fullscreen",
+      showWelcomeScreen: false,
+      loadPreviousSession: true,
+      defaultLanguage: "en",
+      initialMessages: [
+        "أهلاً بك!",
+        "أقدر أعرض لك القائمة والأسعار وأسجل طلبك. تحب تبدأ منين؟"
+      ],
+      i18n: {
+        en: {
+          title: "اطلب طعامك",
+          subtitle: "",
+          footer: "",
+          getStarted: "ابدأ المحادثة",
+          inputPlaceholder: "اكتب رسالتك هنا"
+        }
+      }
+    });
+  }
+</script>
+</body>
+</html>s
